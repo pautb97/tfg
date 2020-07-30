@@ -231,6 +231,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-3">
+
                     <div class="row d-flex justify-content-center">
                         <div id="oee" style="width: 100%; height: auto;"></div>
                     </div>

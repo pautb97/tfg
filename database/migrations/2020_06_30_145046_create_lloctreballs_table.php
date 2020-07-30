@@ -24,6 +24,8 @@ class CreateLloctreballsTable extends Migration
             $table->float('obj_Disponibilitat');
             $table->float('obj_Rendiment');
             $table->float('obj_Qualitat');
+            $table->timestamp('inici_jornada_laboral');
+            $table->timestamp('final_jornada_laboral');
         });
     }
 

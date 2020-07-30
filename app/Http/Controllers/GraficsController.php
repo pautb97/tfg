@@ -27,7 +27,7 @@ class GraficsController extends Controller
         //i guarda una nova linia esdeveniment amb les dades totals
         $botoAturades = request('botoAturades');
         $botoId = DB::table('causes')->where('causa', $botoAturades)->value('id');
-        $tempsAnterior= Esdeveniment::all()->last()->first();
+        $tempsAnterior= Esdeveniment::orderBy('id', 'DESC')->first();
         $tempsAnterior=(Carbon::now()->timestamp)-($tempsAnterior->created_at->timestamp);
         $esdeveniment = new Esdeveniment;
         $esdeveniment->ID_causa = $botoId;
@@ -81,15 +81,26 @@ class GraficsController extends Controller
         $ordre->ID_article = request('inputRef');
         $ordre->unitats_produir = request('inputQuantitat');
         $ordre->save();
-        return $this->getAllData();
 
+        //Insertar línia inici de lot a taula esdeveniments
+
+        $tempsAnterior= Esdeveniment::orderBy('id', 'DESC')->first();
+        $modulTemps=(Carbon::now()->timestamp)-($tempsAnterior->created_at->timestamp);
+        dd($modulTemps,Carbon::now()->timestamp,$tempsAnterior->created_at->timestamp);
+        $esdevenimentInicial = new Esdeveniment;
+        $esdevenimentInicial->ID_causa = 4;
+        $esdevenimentInicial->modul_temps = $modulTemps ;
+        $esdevenimentInicial->maquina_produccio = 0;
+        $esdevenimentInicial->save();
+        return $this->getAllData();
     }
 
     function getAllData(){
 
         //Controlador que gestiona el funcionament de la pantalla principal.
-
         $descripcio = Ordre::orderBy('id', 'desc')->first();
+        $unitatsProduir=$descripcio->unitats_produir;
+
         //futur control de temps EX: Model::whereBetween('date', [$from, $to])->get();
         $desde = $descripcio->created_at;
         $finsa = Carbon::now();
@@ -109,19 +120,23 @@ class GraficsController extends Controller
         $temps = json_encode($temps);
 
         // Aquest codi opera amb les dades del model
+
+        $dftest=Freque::whereDate('created_at', Carbon::today())->get()->SUM('numero_peces_sortint');
         $defectuoses = Qualitat::whereDate('created_at', Carbon::today())->get()->SUM('defectuoses'); //Exemple de com escollir per dia
-        $bones = Freque::all()->SUM('numero_peces');
+        $bones = Freque::whereDate('created_at', Carbon::today())->get()->SUM('numero_peces');
+        $dftest = $bones-$dftest;
         $qualitats[] = ['Bones','Defectuoses'];
         $qualitats[] = ['Bones',$bones];
-        $qualitats[] = ['Defectuoses',$defectuoses];
-        $qualitats[] = ['Peces Restants',(3000 - $defectuoses - $bones)];
+        $qualitats[] = ['Defectuoses',$defectuoses+$dftest];
+        $qualitats[] = ['Peces Restants',($unitatsProduir - $defectuoses - $dftest - $bones)];
         $qualitats = json_encode($qualitats);
+
 
         //Càlcul indexs
         $lloctreballs = Lloctreball::all()->find(1);
 
         //Rendiment
-        $comptaMitja = Freque::all()->count();
+        $comptaMitja = Freque::whereDate('created_at', Carbon::today())->get()->where('idESP','==',1)->count();
         $rendiment =((($bones)/($comptaMitja))/($lloctreballs->Velocitat_esperada))*100;
         $rendiment = json_encode($rendiment);
 
@@ -130,27 +145,29 @@ class GraficsController extends Controller
         $qualitat = json_encode($qualitat);
 
         //Disponibilitat
-        $tempsProductiu = Esdeveniment::all()->where('maquina_produccio','==',1)->SUM('modul_temps');
-        $tempsDisponible = Esdeveniment::all()->SUM('modul_temps');
+        $tempsProductiu = Esdeveniment::whereDate('created_at', Carbon::today())->get()->where('maquina_produccio','==',1)->SUM('modul_temps');
+        $tempsDisponible = Lloctreball::first()->Temps_Disponible;//Canviar per lloctreballs->Temps disponible
         $disponibilitat =  ($tempsProductiu/$tempsDisponible)*100;
         $disponibilitat = json_encode($disponibilitat);
 
-        //Taula indexs
-        $indexs = Index::all();
+        //Taula històric
+        $insertaIndexs = new index;
+        $insertaIndexs->OEE = ($disponibilitat/100)*($rendiment/100)*($qualitat/100)*100;
+        $insertaIndexs->Disponibilitat=$disponibilitat;
+        $insertaIndexs->Rendiment=$rendiment;
+        $insertaIndexs->Qualitat=$qualitat;
+        $insertaIndexs->save();
+
+        $indexs = Index::whereDate('created_at', Carbon::today())->get();
         $indexsTaula[] = ['Data','OEE','Disponibilitat','Rendiment','Qualitat'];
         foreach ($indexs as $index) {
             $indexsTaula[]=[$index->created_at->toTimeString() ,$index->OEE,$index->Disponibilitat,$index->Rendiment,$index->Qualitat];
         }
         $indexsTaula = json_encode($indexsTaula);
 
+        $activaBoto = Esdeveniment::orderBy('id', 'DESC')->first()->maquina_produccio;
+
         return view('pages.principal',
-        compact('qualitats','causes','temps','rendiment','qualitat','disponibilitat','indexsTaula','descripcio','quantitatAProduir')); //,
-
-
-
-
-
+        compact('qualitats','causes','temps','rendiment','qualitat','disponibilitat','indexsTaula','descripcio','quantitatAProduir','activaBoto')); //,
     }
-
-
 }

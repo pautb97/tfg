@@ -17,6 +17,8 @@ class CreateFrequesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->unsignedInteger('numero_peces');
+            $table->unsignedInteger('numero_peces_sortint');
+            $table->unsignedInteger('idESP');
         });
     }
 

@@ -15,7 +15,9 @@ class Lloctreball extends Model
         'obj_OEE',
         'obj_Disponibilitat',
         'obj_Rendiment',
-        'obj_Qualitat'
+        'obj_Qualitat',
+        'inici_jornada_laboral',
+        'final_jornada_laboral'
 
 
     ];
