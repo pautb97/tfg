@@ -21,6 +21,23 @@ use App\Oee;
 class GraficsController extends Controller
 {
 
+    public function repren(){
+
+        $tempsAnterior= Esdeveniment::orderBy('id', 'DESC')->first();
+        $tempsAnterior=(Carbon::now()->timestamp)-($tempsAnterior->created_at->timestamp);
+        $esdeveniment = new Esdeveniment;
+        $esdeveniment->ID_causa = 5;
+        $esdeveniment->modul_temps = null ;
+        $esdeveniment->maquina_produccio = 1;
+        $esdeveniment->save();
+
+        $esdeveniment = ($esdeveniment->id)-1;
+        $esdevenimentAnterior = Esdeveniment::Find($esdeveniment);
+        $esdevenimentAnterior->modul_temps =$tempsAnterior;
+        $esdevenimentAnterior->save();
+        return redirect()->route('principal');
+    }
+
     public function acabaAturades()
     {
         //aquesta funció agafa l'ultima fila de la taula esdeveniments, calcula el modul de temps
@@ -31,16 +48,21 @@ class GraficsController extends Controller
         $tempsAnterior=(Carbon::now()->timestamp)-($tempsAnterior->created_at->timestamp);
         $esdeveniment = new Esdeveniment;
         $esdeveniment->ID_causa = $botoId;
-        $esdeveniment->modul_temps = $tempsAnterior ;
-        $esdeveniment->maquina_produccio = 0;
+        $esdeveniment->modul_temps = null ;
+        $esdeveniment->maquina_produccio = 2;
         $esdeveniment->save();
+        // //Guardar temps anterior
+        $esdeveniment = ($esdeveniment->id)-1;
+        $esdevenimentAnterior = Esdeveniment::Find($esdeveniment);
+        $esdevenimentAnterior->modul_temps =$tempsAnterior;
+        $esdevenimentAnterior->save();
 
         if ($botoAturades == 'Fi de Lot'){
             return view('pages.home');
         }elseif($botoAturades == 'Fi Jornada Laboral'){
             return $this->desaOee();
         }else{
-            return $this->getAllData();
+            return redirect()->route('principal');
         }
 
     }
@@ -86,16 +108,25 @@ class GraficsController extends Controller
 
         $tempsAnterior= Esdeveniment::orderBy('id', 'DESC')->first();
         $modulTemps=(Carbon::now()->timestamp)-($tempsAnterior->created_at->timestamp);
-        dd($modulTemps,Carbon::now()->timestamp,$tempsAnterior->created_at->timestamp);
         $esdevenimentInicial = new Esdeveniment;
         $esdevenimentInicial->ID_causa = 4;
-        $esdevenimentInicial->modul_temps = $modulTemps ;
+        $esdevenimentInicial->modul_temps = null;
         $esdevenimentInicial->maquina_produccio = 0;
         $esdevenimentInicial->save();
-        return $this->getAllData();
+        // //Guardar temps anterior
+        $esdevenimentInicial = ($esdevenimentInicial->id)-1;
+        $esdevenimentAnterior = Esdeveniment::Find($esdevenimentInicial);
+        $esdevenimentAnterior->modul_temps =$modulTemps;
+        $esdevenimentAnterior->save();
+
+        return redirect()->route('principal');
     }
 
     function getAllData(){
+
+        // if(Esdeveniment::orderBy('id', 'DESC')->first()->maquina_produccio != 0){
+
+        // }
 
         //Controlador que gestiona el funcionament de la pantalla principal.
         $descripcio = Ordre::orderBy('id', 'desc')->first();
@@ -109,15 +140,18 @@ class GraficsController extends Controller
         $descripcio = $descripcio->descripcio;
 
         //Carregar dades de la llista desplegable
-        $causes = Causa::all();
-
+        $causes = Causa::all()->where('mostra_grafic',1);
+        //dd($causes);
         //dades pieChart1
         $temps[] = ['ID','Numero'];
+        $temps[] = ['Temps disponible',Lloctreball::first()->Temps_Disponible];
         foreach ($causes as $causa) {
-            $tempsIndividual = Esdeveniment::all()->where('ID_causa',$causa->id)->SUM('modul_temps');
+
+            $tempsIndividual = Esdeveniment::whereDate('created_at', Carbon::today())->get()->where('ID_causa',$causa->id)->SUM('modul_temps');
             $temps[]=[$causa->causa,$tempsIndividual];
         }
         $temps = json_encode($temps);
+
 
         // Aquest codi opera amb les dades del model
 
@@ -165,7 +199,7 @@ class GraficsController extends Controller
         }
         $indexsTaula = json_encode($indexsTaula);
 
-        $activaBoto = Esdeveniment::orderBy('id', 'DESC')->first()->maquina_produccio;
+        $activaBoto = json_encode(Esdeveniment::orderBy('id', 'DESC')->first()->maquina_produccio);
 
         return view('pages.principal',
         compact('qualitats','causes','temps','rendiment','qualitat','disponibilitat','indexsTaula','descripcio','quantitatAProduir','activaBoto')); //,

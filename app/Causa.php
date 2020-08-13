@@ -11,7 +11,8 @@ class Causa extends Model
     protected $table = 'causes';
     protected $fillable = [
         'causa',
-        'tipus'
+        'tipus',
+        'mostra_grafic'
     ];
 
     public function Esdeveniments(){

@@ -16,7 +16,8 @@ class CreateCausesTable extends Migration
         Schema::create('causes', function (Blueprint $table) {
             $table->id();
             $table->string('causa');
-            $table->float('tipus');
+            $table->tinyInteger('tipus');
+            $table->tinyInteger('mostra_grafic');
         });
     }
 

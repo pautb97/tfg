@@ -43,6 +43,10 @@ Route::post('/principal/inserta', 'GraficsController@emplenaOrdrePrimer')->name(
 
 Route::get('/', 'FrontEndController@home')->name('index');
 
+Route::get('/principal/repren', 'GraficsController@repren')->name('repren');
+
+
+
 
 
 //Auth::routes();

@@ -231,7 +231,6 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-3">
-
                     <div class="row d-flex justify-content-center">
                         <div id="oee" style="width: 100%; height: auto;"></div>
                     </div>
@@ -279,13 +278,44 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <form action="{{URL::route('pantallaAturades')}}">
-                                <button type="submit" class="btn btn-danger btn-lg btn-block">Atura</button>
-                            </form>
+                            @if ($activaBoto == 0)
+                                <form action="{{URL::route('repren')}}">
+                                    <button type="submit" class="btn btn-success btn-lg btn-block">Comença</button>
+                                </form>
+                            @else
+                                <form action="{{URL::route('pantallaAturades')}}">
+                                    <button type="submit" class="btn btn-danger btn-lg btn-block">Atura</button>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <form action="{{URL::route('repren')}}" id="modalForm">
+                            <button type="submit" class="btn btn-success btn-lg btn-block">Reprèn</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {{-- Aquest script activa el modal amb el botó reprendre quan activaBoto = 2 --}}
+        <script type="text/javascript">
+
+            var activaBoto = <?php echo $activaBoto; ?>
+
+            if(activaBoto == 2){
+                $('#myModal').modal({backdrop: 'static', keyboard: false});
+                $('#myModal').modal('show');
+            };
+
+        </script>
     </body>
 </html>
