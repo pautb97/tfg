@@ -12,7 +12,7 @@ class LloctreballsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('pages')->insert([
+        DB::table('lloctreballs')->insert([
             [
                'Descripcio'=>'dades estatiques',
                 'Temps_Disponible'=>28800,
