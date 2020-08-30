@@ -14,7 +14,6 @@ class LloctreballsTableSeeder extends Seeder
     {
         DB::table('lloctreballs')->insert([
             [
-               'Descripcio'=>'dades estatiques',
                 'Temps_Disponible'=>28800,
                 'Velocitat_esperada'=>15,
                 'Temps_lectura'=>60,

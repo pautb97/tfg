@@ -27,21 +27,21 @@ Route::get('/historic/indexOEE', 'IndexController@index')->name('historic.index'
 
 Route::delete('/historic/index/destroy/{oee}', 'IndexController@destroy')->name('historic.index.destroy');
 
-Route::get('/login', 'FrontEndController@page')->name('login');
+Route::get('/login', 'GraficsController@page')->name('login');
 
-Route::get('/aturades', 'FrontEndController@aturades')->name('pantallaAturades');
+Route::get('/aturades', 'GraficsController@aturades')->name('pantallaAturades');
 
 Route::get('/aturades/acaba', 'GraficsController@acabaAturades')->name('acabaAturades');
 
-Route::post('/principal/defectuoses', 'FrontEndController@afegeixUnitatsDefectuoses')->name('defectuoses');
+Route::post('/principal/defectuoses', 'GraficsController@afegeixUnitatsDefectuoses')->name('defectuoses');
 
 Route::get('/principal', 'GraficsController@getAllData')->name('principal');
 
-Route::get('/teclat', 'FrontEndController@page')->name('teclatNumeric');
+Route::get('/teclat', 'GraficsController@page')->name('teclatNumeric');
 
 Route::post('/principal/inserta', 'GraficsController@emplenaOrdrePrimer')->name('inserta');
 
-Route::get('/', 'FrontEndController@home')->name('index');
+Route::get('/', 'GraficsController@home')->name('index');
 
 Route::get('/principal/repren', 'GraficsController@repren')->name('repren');
 

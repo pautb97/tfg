@@ -16,7 +16,6 @@ class CreateLloctreballsTable extends Migration
         Schema::create('lloctreballs', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('Descripcio');
             $table->float('Temps_Disponible');
             $table->float('Velocitat_esperada');
             $table->float('Temps_lectura');

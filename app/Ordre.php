@@ -11,7 +11,8 @@ class Ordre extends Model
         'unitats_produir',
         'unitats_produides',
         'frequencia_produccio',
-        'unitats_defectuoses'
+        'unitats_defectuoses',
+        'data_hora_final'
     ];
 
     public function Articles(){

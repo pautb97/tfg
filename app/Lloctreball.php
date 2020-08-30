@@ -9,7 +9,6 @@ class Lloctreball extends Model
     protected $fillable = [
 
         'Temps_Disponible',
-        'Descripcio',
         'Velocitat_esperada',
         'Temps_lectura',
         'obj_OEE',

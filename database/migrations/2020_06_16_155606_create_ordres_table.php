@@ -21,6 +21,7 @@ class CreateOrdresTable extends Migration
             $table->unsignedInteger('unitats_produides')->nullable()->change();
             $table->unsignedInteger('frequencia_produccio')->nullable()->change();
             $table->unsignedInteger('unitats_defectuoses')->nullable()->change();
+            $table->timestamp('data_hora_final')->nullable()->change();
 
         });
     }

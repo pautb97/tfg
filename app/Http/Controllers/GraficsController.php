@@ -20,6 +20,32 @@ use App\Oee;
 
 class GraficsController extends Controller
 {
+    public function home()
+    {
+        return view('pages.home');
+    }
+
+    public function afegeixUnitatsDefectuoses()
+    {
+        //Afegeix la quantitat d'articles defectuosos en la taula corresponent
+        if (request('inputQuantitatDefectuoses')==null){
+            return back();
+        }
+
+        $unitatsDefectuoses=request('inputQuantitatDefectuoses');
+        $sumaUnitatsDefectuoses= new qualitat;
+        $sumaUnitatsDefectuoses->defectuoses=$unitatsDefectuoses;
+        $sumaUnitatsDefectuoses->save();
+
+        return back();
+    }
+
+    public function aturades()
+    {
+        $llistaAturades = Causa::all()->where('tipus','=',1);
+        $llistaAturadesTotals = Causa::all()->where('tipus','=',2);
+        return view('pages.pantallaAturades',compact('llistaAturades','llistaAturadesTotals'));
+    }
 
     public function repren(){
 

@@ -17,7 +17,7 @@ class ArticlesTableSeeder extends Seeder
         DB::table('articles')->insert([
             [
                 'referencia'=>11111,
-                'descripcio'=>'Lentrega es lo 28, espavil',
+                'descripcio'=>'Lentrega es lo 28, espavil'
             ]
         ]);
 
