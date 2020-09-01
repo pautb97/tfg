@@ -201,10 +201,11 @@ class GraficsController extends Controller
         $tempsTotal = Esdeveniment::whereDate('created_at', Carbon::today())->get()->where('ID_causa','!=',3)->SUM('modul_temps');
         $altres = $tempsTotal;
         foreach ($causes as $causa) {
-
+        if($causa->id != 3){
             $tempsIndividual = Esdeveniment::whereDate('created_at', Carbon::today())->get()->where('ID_causa',$causa->id)->SUM('modul_temps');
             $temps[]=[$causa->causa,$tempsIndividual];
             $altres = $altres - $tempsIndividual;
+        }
         }
         $temps[] = ['Altres',$altres]; // suma el temps total menys el temps per a dinar
         $temps = json_encode($temps);
