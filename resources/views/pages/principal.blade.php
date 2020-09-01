@@ -224,48 +224,59 @@
                     <li class="nav-item">
                         <a class="nav-link" href={{URL::route('ordres.index')}}>Històric Ordres</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href={{URL::route('ordres.index')}}>Històric Consums</a> {{--Actualitzar ruta--}}
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="navbar-brand" href="#">Potència actual:</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="navbar-brand" href="#">{{$consum}} W</a>
+                    </li>
                 </ul>
             </div>
         </nav>
 
         <div class="container-fluid">
             <div class="row">
-                <div class="col-3">
+                <div class="col-2">
                     <div class="row d-flex justify-content-center">
-                        <div id="oee" style="width: 100%; height: auto;"></div>
+                        <div id="oee" style="width: 170px; height: 170px;"></div>
                     </div>
                     <div class="row d-flex justify-content-center">
-                        <div id="disponibilitat" style="width: 100%; height: auto;"></div>
+                        <div id="disponibilitat" style="width: 170px; height: 170px;"></div>
                     </div>
                     <div class="row d-flex justify-content-center">
-                        <div id="rendiment" style="width: 100%; height: auto;"></div>
+                        <div id="rendiment" style="width: 170px; height: 170px;"></div>
                     </div>
                     <div class="row d-flex justify-content-center">
-                        <div id="qualitat" style="width: 100%; height: auto;"></div>
+                        <div id="qualitat" style="width: 170px; height: 170px;"></div>
                     </div>
             </div>
 
-                <div class="col-9">
+                <div class="col-10">
                     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">{{$descripcio}}</h1>
+                    <h2 class="h2">{{$descripcio}}</h2>
                         <div class="btn-toolbar mb-2 mb-md-0">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
                             <h2 style="text-align: center;">Temps disponible<h2>
-                            <div id="piechart"></div>
+                            <div id="piechart" style="width: 538px; height: 190px;"></div>
                         </div>
                         <div class="col-6">
                             <h2 style="text-align: center;">Qualitat<h2>
-                            <div id="piechart2" style="width: 100%; height: 100%;"></div>
+                            <div id="piechart2" style="width: 538px; height: 190px;"></div>
                             <form action="{{URL::route('defectuoses')}}" method="POST">
                                 @csrf
                                 <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <button for="inputQuantitatDefectuoses" class="btn btn-outline-secondary" type="submit">Desa</button>
                                 </div>
-                                <input type="number" id="inputQuantitatDefectuoses" name="inputQuantitatDefectuoses" class="form-control" placeholder="Quantitat d'unitats defectuoses" aria-describedby="basic-addon1">
+                                <input type="number" id="inputQuantitatDefectuoses" name="inputQuantitatDefectuoses" class="form-control" placeholder="Quantitat d'unitats defectuoses" aria-describedby="basic-addon1" >
                                 </div>
                             </form>
                         </div>
@@ -273,7 +284,7 @@
                     <div class="row">
                         <div class="col">
                             <h2 style="text-align: center;">Històric<h2>
-                            <div id="curve_chart" style="width: 100%; height: 300px;"></div>
+                            <div id="curve_chart" style="width: 100%; height: auto;"></div>
                         </div>
                     </div>
                     <div class="row">

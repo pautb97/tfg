@@ -12,9 +12,7 @@ $comptaPecesEntrant = $_POST['comptaPecesEntrant'];
 $comptaPecesSortint = $_POST['comptaPecesSortint'];
 $idESP = $_POST['idESP'];
 
-$res = $mysqli->query("INSERT INTO `tfg`.`freques`
-(`id`, `created_at`, `updated_at`, `numero_peces`,`numero_peces_sortint`,`idESP`)
-VALUES (NULL,CURRENT_TIMESTAMP,NULL,$comptaPecesEntrant,$comptaPecesSortint,$idESP)");
+$res = $mysqli->query("INSERT INTO `tfg`.`freques`(`id`, `created_at`, `updated_at`, `numero_peces`,`numero_peces_sortint`,`idESP`)VALUES (NULL,CURRENT_TIMESTAMP,NULL,$comptaPecesEntrant,$comptaPecesSortint,$idESP)");
 echo "Missatge enviat";
 ?>
 

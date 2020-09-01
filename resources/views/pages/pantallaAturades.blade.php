@@ -8,15 +8,19 @@
     </head>
 
     <body class="text-center">
-        <div class="btn-group-vertical">
-            <form class="form-signin" action="{{URL::route('acabaAturades')}}">
-                    @foreach ($llistaAturades as $llistaAturada)
-                        <button type="submit" class="btn btn-secondary btn-lg btn-block" name="botoAturades" value="{{$llistaAturada->causa}}">{{ $llistaAturada->causa }}</button>
-                    @endforeach
-                    @foreach ($llistaAturadesTotals as $llistaAturadaTotal)
-                        <button type="submit" class="btn btn-danger btn-lg btn-block" name="botoAturades" value="{{$llistaAturadaTotal->causa}}">{{ $llistaAturadaTotal->causa }}</button>
-                    @endforeach
-            </form>
+        <div class="jumbotron vertical-center">
+
+                <div class="container center">
+                    <form class="form-signin" action="{{URL::route('acabaAturades')}}">
+                            @foreach ($llistaAturades as $llistaAturada)
+                                <button type="submit" class="btn btn-secondary btn-lg btn-block" name="botoAturades" value="{{$llistaAturada->causa}}">{{ $llistaAturada->causa }}</button>
+                            @endforeach
+                            @foreach ($llistaAturadesTotals as $llistaAturadaTotal)
+                                <button type="submit" class="btn btn-danger btn-lg btn-block" name="botoAturades" value="{{$llistaAturadaTotal->causa}}">{{ $llistaAturadaTotal->causa }}</button>
+                            @endforeach
+                    </form>
+                </div>
+
         </div>
     </body>
 </html>

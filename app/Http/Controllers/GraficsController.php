@@ -17,6 +17,7 @@ use App\Index;
 use App\Ordre;
 use App\Article;
 use App\Oee;
+use App\Consum;
 
 class GraficsController extends Controller
 {
@@ -154,6 +155,10 @@ class GraficsController extends Controller
 
         // }
 
+        //Prendre l'ultim valor de consum
+        $consumActual = Consum::orderBy('id', 'desc')->first();
+        $consum=$consumActual->potencia;
+
         //Controlador que gestiona el funcionament de la pantalla principal.
         $descripcio = Ordre::orderBy('id', 'desc')->first();
         $unitatsProduir=$descripcio->unitats_produir;
@@ -228,6 +233,6 @@ class GraficsController extends Controller
         $activaBoto = json_encode(Esdeveniment::orderBy('id', 'DESC')->first()->maquina_produccio);
 
         return view('pages.principal',
-        compact('qualitats','causes','temps','rendiment','qualitat','disponibilitat','indexsTaula','descripcio','quantitatAProduir','activaBoto')); //,
+        compact('qualitats','causes','temps','rendiment','qualitat','disponibilitat','indexsTaula','descripcio','quantitatAProduir','activaBoto','consum')); //,
     }
 }
