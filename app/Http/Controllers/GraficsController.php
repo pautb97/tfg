@@ -237,9 +237,9 @@ class GraficsController extends Controller
         $qualitat = json_encode($qualitat);
 
         //Disponibilitat
-        $tempsProductiu = Esdeveniment::whereDate('created_at', Carbon::today())->get()->where('maquina_produccio','==',1)->SUM('modul_temps');
+        $tempsProductiu = Esdeveniment::whereDate('created_at', Carbon::today())->get()->where('maquina_produccio','==',1)->where('ID_causa','!=',3)->SUM('modul_temps');
         $tempsDisponible = $tempsTotal;
-        $disponibilitat =  ($tempsProductiu/$tempsDisponible)*100;
+        $disponibilitat =  ($tempsProductiu/$tempsDisponible)*100; //no sempre funciona com cal
         $disponibilitat = json_encode($disponibilitat);
 
         //Taula històric
