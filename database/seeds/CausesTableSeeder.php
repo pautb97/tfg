@@ -51,7 +51,7 @@ class CausesTableSeeder extends Seeder
                 'tipus'=> 1,
                 'mostra_grafic'=>1
             ],[
-                'causa'=> 'Excés de material',
+                'causa'=> 'Nou lot',
                 'tipus'=> 1,
                 'mostra_grafic'=>0
             ],[

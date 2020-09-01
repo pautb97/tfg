@@ -18,11 +18,28 @@ use App\Ordre;
 use App\Article;
 use App\Oee;
 use App\Consum;
+use App\Exceptions\Handler;
+use Exception;
 
 class GraficsController extends Controller
 {
     public function home()
     {
+        try {
+            $tempsAnterior= Esdeveniment::whereDate('created_at', Carbon::today())->orderBy('id', 'DESC')->first();
+            $tempsAnterior=(Carbon::now()->timestamp)-($tempsAnterior->created_at->timestamp);
+            $esdeveniment = new Esdeveniment;
+            $esdeveniment->ID_causa = 9;
+            $esdeveniment->modul_temps = null ;
+            $esdeveniment->maquina_produccio = 0;
+            $esdeveniment->save();
+        } catch (Exception $e) {
+            $esdeveniment = new Esdeveniment;
+            $esdeveniment->ID_causa = 1;
+            $esdeveniment->modul_temps = 0 ;
+            $esdeveniment->maquina_produccio = 0;
+            $esdeveniment->save();
+        }
         return view('pages.home');
     }
 
@@ -51,9 +68,17 @@ class GraficsController extends Controller
     public function repren(){
 
         $tempsAnterior= Esdeveniment::orderBy('id', 'DESC')->first();
+
+        if ($tempsAnterior->ID_causa == 2){ //Comprovar si l'anterior ha sigut pausa per a dinar
+            $nouValorId = 3;
+        }else{
+            $nouValorId = 5;
+        }
+
         $tempsAnterior=(Carbon::now()->timestamp)-($tempsAnterior->created_at->timestamp);
+
         $esdeveniment = new Esdeveniment;
-        $esdeveniment->ID_causa = 5;
+        $esdeveniment->ID_causa = $nouValorId;
         $esdeveniment->modul_temps = null ;
         $esdeveniment->maquina_produccio = 1;
         $esdeveniment->save();
@@ -151,19 +176,17 @@ class GraficsController extends Controller
 
     function getAllData(){
 
-        // if(Esdeveniment::orderBy('id', 'DESC')->first()->maquina_produccio != 0){
-
-        // }
-
         //Prendre l'ultim valor de consum
         $consumActual = Consum::orderBy('id', 'desc')->first();
         $consum=$consumActual->potencia;
 
-        //Controlador que gestiona el funcionament de la pantalla principal.
+        // Adquirir numero d'unitats a produir
         $descripcio = Ordre::orderBy('id', 'desc')->first();
         $unitatsProduir=$descripcio->unitats_produir;
 
         //futur control de temps EX: Model::whereBetween('date', [$from, $to])->get();
+
+        //adquirir dades nom d'article i quantitat
         $desde = $descripcio->created_at;
         $finsa = Carbon::now();
         $quantitatAProduir = $descripcio->unitats_produir;
@@ -175,12 +198,15 @@ class GraficsController extends Controller
         //dd($causes);
         //dades pieChart1
         $temps[] = ['ID','Numero'];
-        $temps[] = ['Temps disponible',Lloctreball::first()->Temps_Disponible];
+        $tempsTotal = Esdeveniment::whereDate('created_at', Carbon::today())->get()->where('ID_causa','!=',3)->SUM('modul_temps');
+        $altres = $tempsTotal;
         foreach ($causes as $causa) {
 
             $tempsIndividual = Esdeveniment::whereDate('created_at', Carbon::today())->get()->where('ID_causa',$causa->id)->SUM('modul_temps');
             $temps[]=[$causa->causa,$tempsIndividual];
+            $altres = $altres - $tempsIndividual;
         }
+        $temps[] = ['Altres',$altres]; // suma el temps total menys el temps per a dinar
         $temps = json_encode($temps);
 
 
@@ -206,12 +232,12 @@ class GraficsController extends Controller
         $rendiment = json_encode($rendiment);
 
         //Qualitat
-        $qualitat = (($bones)/($bones + $defectuoses)*100);
+        $qualitat = ((($bones)/($bones + $defectuoses))*100);
         $qualitat = json_encode($qualitat);
 
         //Disponibilitat
         $tempsProductiu = Esdeveniment::whereDate('created_at', Carbon::today())->get()->where('maquina_produccio','==',1)->SUM('modul_temps');
-        $tempsDisponible = Lloctreball::first()->Temps_Disponible;//Canviar per lloctreballs->Temps disponible
+        $tempsDisponible = $tempsTotal;
         $disponibilitat =  ($tempsProductiu/$tempsDisponible)*100;
         $disponibilitat = json_encode($disponibilitat);
 
