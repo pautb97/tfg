@@ -15,17 +15,28 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource('ordres','OrdreController');
 
-// Route::get('/historic', 'OrdreController@index')->name('historic');
+Route::get('/historicOrdre', 'OrdreController@index')->name('historicOrdre.index');
 
-// Route::delete('/historic/destroy/{ordre}', 'OrdreController@destroy')->name('historic.destroy');
+Route::delete('/OrdreOrdre/destroy/{ordre}', 'OrdreController@destroy')->name('historicOrdre.destroy');
 
-// Route::get('/historic/edit/', 'OrdreController@edit')->name('historic.edit');
+Route::get('/historicOrdre/edit/', 'OrdreController@edit')->name('historicOrdre.edit');
 
-// Route::get('/historic/{ordre}/actualitza/', 'OrdreController@update')->name('historic.actualitza');
+Route::get('/historicOrdre/{ordre}/actualitza/', 'OrdreController@update')->name('historicOrdre.actualitza');
 
-Route::get('/historic/indexOEE', 'IndexController@index')->name('historic.index');
 
-Route::delete('/historic/index/destroy/{oee}', 'IndexController@destroy')->name('historic.index.destroy');
+Route::get('/historicConsum', 'ConsumController@index')->name('historicConsum.index');
+
+Route::delete('/historicConsum/destroy/{Consum}', 'ConsumController@destroy')->name('historicConsum.destroy');
+
+Route::get('/historicConsum/edit/', 'ConsumController@edit')->name('historicConsum.edit');
+
+Route::get('/historicConsum/{Consum}/actualitza/', 'ConsumController@update')->name('historicConsum.update');
+
+
+Route::get('/historicIndex/indexOEE', 'IndexController@index')->name('historicIndex.index');
+
+Route::delete('/historicIndex/index/destroy/{oee}', 'IndexController@destroy')->name('historicIndex.destroy');
+
 
 Route::get('/login', 'GraficsController@page')->name('login');
 

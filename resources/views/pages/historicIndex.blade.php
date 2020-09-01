@@ -22,9 +22,6 @@
                     <li class="nav-item active">
                         <a class="nav-link" href="{{URL::route('principal')}}"><b>Pantalla Principal</b></a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href={{URL::route('historic')}}>Ordres</a>
-                    </li>
                 </ul>
             </div>
         </nav>
@@ -56,7 +53,7 @@
                         <td>{{$item->index_oee}}</td>
                         <td>{{$item->unitats_defectuoses}}</td>
                         <td>
-                            <form class="form-signin" action="{{URL::route('historic.index.destroy',$item)}}" method="POST">
+                            <form class="form-signin" action="{{URL::route('historicIndex.destroy',$item)}}" method="POST">
                                 {{ csrf_field() }}
                                 {{ method_field('DELETE') }}
                                 <button class="delete btn btn-danger" type="submit">

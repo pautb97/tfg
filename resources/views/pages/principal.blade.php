@@ -219,13 +219,13 @@
             <div class="navbar-collapse collapse order-1 order-md-0 dual-collapse2">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href={{URL::route('historic.index')}}>Històric OEE</a>
+                        <a class="nav-link" href={{URL::route('historicIndex.index')}}>Històric OEE</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href={{URL::route('ordres.index')}}>Històric Ordres</a>
+                        <a class="nav-link" href={{URL::route('historicOrdre.index')}}>Històric Ordres</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href={{URL::route('ordres.index')}}>Històric Consums</a> {{--Actualitzar ruta--}}
+                        <a class="nav-link" href={{URL::route('historicConsum.index')}}>Històric Consums</a> {{--Actualitzar ruta--}}
                     </li>
                 </ul>
                 <ul class="nav navbar-nav ml-auto">

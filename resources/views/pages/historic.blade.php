@@ -18,9 +18,6 @@
                     <li class="nav-item active">
                         <a class="nav-link" href="{{URL::route('principal')}}"><b>Pantalla Principal</b></a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href={{URL::route('ordres.index')}}>Index OEE</a>
-                    </li>
                 </ul>
             </div>
         </nav>
