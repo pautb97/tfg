@@ -328,5 +328,15 @@
             };
 
         </script>
+
+        <script>
+        $(document).ready(function(){
+            //Refrescar pàgina cada 90s
+            setTimeout(refrescar, 90000);
+        });
+        function refrescar(){
+            location.reload();
+        }
+</script>
     </body>
 </html>
