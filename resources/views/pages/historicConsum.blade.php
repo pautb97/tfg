@@ -3,11 +3,36 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Laravel</title>
+        <title>Històric de consums</title>
         <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
-        <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
-        <link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js" defer></script>
         <script src="/js/app.js"></script>
+
+        <script type="text/javascript">
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawChart);
+
+            var consumsTaula = <?php echo $consumsTaula; ?>
+
+            function drawChart() {
+
+            var data = google.visualization.arrayToDataTable(consumsTaula);
+
+            var options = {
+                title: 'Històric de consums',
+                curveType: 'function',
+                legend: { position: 'right' },
+                colors: ['#003f5c', '#7a5195', '#ef5675', '#ffa600']
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+            chart.draw(data, options);
+            }
+        </script>
     </head>
 
     <body>
@@ -21,8 +46,13 @@
                 </ul>
             </div>
         </nav>
-
-        <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div id="curve_chart" style="width: 100%; height: 400px;"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="container-fluid">
             <table class="table" id="table_id">
                 <thead>
                 <tr>
@@ -45,11 +75,7 @@
                         <td>{{$item->intensitat_T}}</td>
                         <td>{{$item->potencia}}</td>
                         <td>
-                            <form>
-                                <button href="#" class="btn btn-info edit" data-toggle="modal" data-target="#editModal">
-                                    <span class="glyphicon glyphicon-edit"></span> Edit
-                                </button>
-                            </form>
+
                             <form class="form-signin" action="{{URL::route('historicConsum.destroy',$item)}}" method="POST">
                                 {{ csrf_field() }}
                                 {{ method_field('DELETE') }}
@@ -59,49 +85,15 @@
                             </form>
                         </td>
                     </tr>
-{{-- Modal per a editar --}}
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{URL::route('historicConsum.update',$item)}}" method="POST" id="modalForm">
-                {{ csrf_token() }}
-                {{ method_field('PUT') }}
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="unitats_produir">Unitats a produir</label>
-                        <input type="text" name="unitats_produir" id="unitats_produir" class="form-control" placeholder="Editar unitats a produir">
-                    </div>
-                    <div class="form-group">
-                        <label for="unitats_produides">Unitats produides</label>
-                        <input type="text" name="unitats_produides" id="unitats_produides" class="form-control" placeholder="Editar unitats produides">
-                    </div>
-                    <div class="form-group">
-                        <label for="unitats_defectuoses">Unitats defectuoses</label>
-                        <input type="text" name="unitats_defectuoses" id="unitats_defectuoses" class="form-control" placeholder="Editar unitats defectuoses">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveModalButton" data-dismiss="modal">Save changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
                     @endforeach
                 </tbody>
-            </div>
-        </table>
+            </table>
+        </div>
 
+        <script type="text/javascript">
 
-        <script>
             $(document).ready( function () {
+
                 var table = $('#table_id').DataTable();
 
                 table.on('click','.edit',function(){

@@ -1,9 +1,10 @@
 <?php
 
+
 namespace App\Http\Controllers;
-
+use Carbon\Carbon;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use App\Page;
 use App\Consum;
 use App\Causa;
@@ -21,7 +22,14 @@ class ConsumController extends Controller
     public function index()
     {
         $historic = Consum::all();
-        return view('pages.historicConsum',compact('historic'));
+        $consums = Consum::whereDate('created_at', Carbon::today())->get();
+        $consumsTaula[] = ['Data','IR(A)','IS(A)','IT(A)','Potència(W)'];
+        foreach ($consums as $consum) {
+            $consumsTaula[]=[$consum->created_at->toTimeString() ,$consum->intensitat_R,$consum->intensitat_S,$consum->intensitat_T,$consum->potencia];
+        }
+        $consumsTaula = json_encode($consumsTaula);
+        //dd($consumsTaula);
+        return view('pages.historicConsum',compact('historic','consumsTaula'));
     }
 
     /**

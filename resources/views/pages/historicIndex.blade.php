@@ -4,9 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Laravel</title>
-        <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
-        <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
-        <link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+        <<link rel="stylesheet" href="{{ mix('/css/app.css') }}">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js" defer></script>
         <script src="/js/app.js"></script>
 
     </head>
@@ -49,6 +49,7 @@
                         <td>{{$item->index_oee}}</td>
                         <td>{{$item->unitats_defectuoses}}</td>
                         <td>
+                            <button type="button" class="edit btn btn-primary" data-toggle="modal" data-target="#editModal">Editar </button>
                             <form class="form-signin" action="{{URL::route('historicIndex.destroy',$item)}}" method="POST">
                                 {{ csrf_field() }}
                                 {{ method_field('DELETE') }}

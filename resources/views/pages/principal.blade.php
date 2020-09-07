@@ -200,7 +200,7 @@
             var data = google.visualization.arrayToDataTable(taulaIndexs);
 
             var options = {
-                title: 'Company Performance',
+                title: 'Evolució dels Indicadors',
                 curveType: 'function',
                 legend: { position: 'right' },
                 colors: ['#003f5c', '#7a5195', '#ef5675', '#ffa600']
@@ -313,9 +313,13 @@
                             <button type="submit" class="btn btn-success btn-lg btn-block">Reprèn</button>
                         </form>
                     </div>
+                    <div class="modal-body">
+                        <form action="{{URL::route('pantallaAturades')}}" id="modalForm">
+                            <button type="submit" class="btn btn-info btn-lg btn-block">Informa</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-
         </div>
         {{-- Aquest script activa el modal amb el botó reprendre quan activaBoto = 2 --}}
         <script type="text/javascript">
