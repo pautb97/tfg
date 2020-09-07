@@ -193,26 +193,59 @@ class GraficsController extends Controller
         $descripcio = Article::where('referencia','=',$descripcio->ID_article)->firstOrFail();
         $descripcio = $descripcio->descripcio;
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //Automatitzar procés de reconeixement d'aturades i funcionament de la màquina.
+        //Revisa si la màquina està produïnt i depèn del cas crea una línia o una altra (passa cada vegada que es refresca la pàgina)
+        $llegirFreques = Freque::whereDate('created_at', Carbon::today())->orderBy('id', 'DESC')->first();
+        $llegirEsdeveniments = Esdeveniment::whereDate('created_at', Carbon::today())->orderBy('id', 'DESC')->first();
+
+        if($llegirFreques->numero_peces <= 5){
+            if ($llegirEsdeveniments->maquina_produccio == 0){
+                $emplenaIdCausa = $llegirEsdeveniments -> ID_causa;
+                $emplenaMaquinaProduccio = 0;
+            }elseif($llegirEsdeveniments->maquina_produccio == 1){
+                $emplenaIdCausa = 13;
+                $emplenaMaquinaProduccio = 2;
+            }elseif($llegirEsdeveniments->maquina_produccio == 2){
+                $emplenaIdCausa = $llegirEsdeveniments -> ID_causa;
+                $emplenaMaquinaProduccio = 2;
+            }
+        }elseif($llegirFreques->numero_peces > 5){
+            $emplenaIdCausa = 5;
+            $emplenaMaquinaProduccio = 1;
+        }
+
+        $modulTemps=(Carbon::now()->timestamp)-($llegirEsdeveniments->created_at->timestamp);
+        $esdevenimentInicial = new Esdeveniment;
+        $esdevenimentInicial->ID_causa = $emplenaIdCausa;
+        $esdevenimentInicial->modul_temps = null;
+        $esdevenimentInicial->maquina_produccio = $emplenaMaquinaProduccio;
+        $esdevenimentInicial->save();
+        // //Guardar temps anterior
+        $esdevenimentInicial = ($esdevenimentInicial->id)-1;
+        $esdevenimentAnterior = Esdeveniment::Find($esdevenimentInicial);
+        $esdevenimentAnterior->modul_temps =$modulTemps;
+        $esdevenimentAnterior->save();
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         //Carregar dades de la llista desplegable
         $causes = Causa::all()->where('mostra_grafic',1);
-        //dd($causes);
+
         //dades pieChart1
         $temps[] = ['ID','Numero'];
-        $tempsTotal = Esdeveniment::whereDate('created_at', Carbon::today())->get()->where('ID_causa','!=',3)->SUM('modul_temps');
+        $tempsTotal = Esdeveniment::whereDate('created_at', Carbon::today())->get()->where('ID_causa','!=',2)->SUM('modul_temps');
         $altres = $tempsTotal;
+
         foreach ($causes as $causa) {
-        if($causa->id != 3){
             $tempsIndividual = Esdeveniment::whereDate('created_at', Carbon::today())->get()->where('ID_causa',$causa->id)->SUM('modul_temps');
             $temps[]=[$causa->causa,$tempsIndividual];
             $altres = $altres - $tempsIndividual;
-        }
         }
         $temps[] = ['Altres',$altres]; // suma el temps total menys el temps per a dinar
         $temps = json_encode($temps);
 
 
-        // Aquest codi opera amb les dades del model
-
+        // Dades PieChart2
         $dftest=Freque::whereDate('created_at', Carbon::today())->get()->SUM('numero_peces_sortint');
         $defectuoses = Qualitat::whereDate('created_at', Carbon::today())->get()->SUM('defectuoses'); //Exemple de com escollir per dia
         $bones = Freque::whereDate('created_at', Carbon::today())->get()->SUM('numero_peces');
@@ -233,13 +266,14 @@ class GraficsController extends Controller
         $rendiment = json_encode($rendiment);
 
         //Qualitat
-        $qualitat = ((($bones)/($bones + $defectuoses))*100);
+        $qualitat = ((($bones)/($bones + $defectuoses + $dftest))*100);
         $qualitat = json_encode($qualitat);
 
         //Disponibilitat
-        $tempsProductiu = Esdeveniment::whereDate('created_at', Carbon::today())->get()->where('maquina_produccio','==',1)->where('ID_causa','!=',3)->SUM('modul_temps');
+        $tempsProductiu = Esdeveniment::whereDate('created_at', Carbon::today())->get()->where('ID_causa','==',5)->SUM('modul_temps');
         $tempsDisponible = $tempsTotal;
         $disponibilitat =  ($tempsProductiu/$tempsDisponible)*100; //no sempre funciona com cal
+        //dd($tempsProductiu,$tempsDisponible);
         $disponibilitat = json_encode($disponibilitat);
 
         //Taula històric
@@ -260,6 +294,6 @@ class GraficsController extends Controller
         $activaBoto = json_encode(Esdeveniment::orderBy('id', 'DESC')->first()->maquina_produccio);
 
         return view('pages.principal',
-        compact('qualitats','causes','temps','rendiment','qualitat','disponibilitat','indexsTaula','descripcio','quantitatAProduir','activaBoto','consum')); //,
+        compact('qualitats','causes','temps','rendiment','qualitat','disponibilitat','indexsTaula','descripcio','quantitatAProduir','activaBoto','consum'));
     }
 }

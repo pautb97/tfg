@@ -66,6 +66,10 @@ class CausesTableSeeder extends Seeder
                 'causa'=> 'Fi Jornada Laboral',
                 'tipus'=> 2,
                 'mostra_grafic'=>0
+            ],[
+                'causa'=> 'Altres',
+                'tipus'=> 1,
+                'mostra_grafic'=>0
             ]
             ]
         );

@@ -17,7 +17,7 @@ class CreateEsdevenimentsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->unsignedBigInteger('ID_causa');
-            $table->float('modul_temps');
+            $table->float('modul_temps')->nullable()->change();
             $table->boolean('maquina_produccio');
         });
     }
