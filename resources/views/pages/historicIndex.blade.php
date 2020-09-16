@@ -49,7 +49,6 @@
                         <td>{{$item->index_oee}}</td>
                         <td>{{$item->unitats_defectuoses}}</td>
                         <td>
-                            <button type="button" class="edit btn btn-primary" data-toggle="modal" data-target="#editModal">Editar </button>
                             <form class="form-signin" action="{{URL::route('historicIndex.destroy',$item)}}" method="POST">
                                 {{ csrf_field() }}
                                 {{ method_field('DELETE') }}

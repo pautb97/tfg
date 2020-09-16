@@ -84,6 +84,7 @@ class OrdreController extends Controller
             'unitats_defectuoses' => 'required',
         ]);
 
+        dd('unitats_produir');
         $ordre->unitats_produir = $request->input('unitats_produir');
         $ordre->unitats_produides = $request->input('unitats_produides');
         $ordre->unitats_defectuoses = $request->input('unitats_defectuoses');

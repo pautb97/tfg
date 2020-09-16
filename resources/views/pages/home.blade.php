@@ -11,7 +11,7 @@
             <div class="container">
                 <form class="form-signin" action="{{URL::route('inserta')}}" method="POST">
                     @csrf
-                    <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+                    <img class="mb-4" src="https://docplayer.es/docs-images/100/146556563/images/25-0.jpg" alt="" width="auto" height="300">
                     @if (session('error'))
                         <div class="alert alert-danger">{{ session('error') }}</div>
                     @endif

@@ -18,10 +18,10 @@ class CreateOrdresTable extends Migration
             $table->timestamps();
             $table->unsignedInteger('ID_article');
             $table->unsignedInteger('unitats_produir');
-            $table->unsignedInteger('unitats_produides')->nullable()->change();
-            $table->unsignedInteger('frequencia_produccio')->nullable()->change();
-            $table->unsignedInteger('unitats_defectuoses')->nullable()->change();
-            $table->timestamp('data_hora_final')->nullable()->change();
+            $table->unsignedInteger('unitats_produides')->nullable();
+            $table->unsignedInteger('frequencia_produccio')->nullable();
+            $table->unsignedInteger('unitats_defectuoses')->nullable();
+            $table->timestamp('data_hora_final')->nullable();
 
         });
     }
