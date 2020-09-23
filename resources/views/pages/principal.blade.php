@@ -327,7 +327,7 @@
             var activaBoto = <?php echo $activaBoto; ?>
 
             if(activaBoto == 2){
-                $('#myModal').modal({backdrop: 'static', keyboard: false});
+                //$('#myModal').modal({backdrop: 'static', keyboard: false});
                 $('#myModal').modal('show');
             };
 

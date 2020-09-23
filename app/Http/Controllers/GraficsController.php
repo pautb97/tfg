@@ -110,7 +110,7 @@ class GraficsController extends Controller
         $esdevenimentAnterior->save();
 
         if ($botoAturades == 'Fi de Lot'){
-            return view('pages.home');
+            return $this->desaOrdre();
         }elseif($botoAturades == 'Fi Jornada Laboral'){
             return $this->desaOee();
         }else{
@@ -118,6 +118,8 @@ class GraficsController extends Controller
         }
 
     }
+
+
 
     public function desaOee(){
 
@@ -134,7 +136,29 @@ class GraficsController extends Controller
         $Oee->unitats_defectuoses=$collectDefectuoses->defectuoses;
         $Oee->save();
 
-        return view('pages.home');
+        return $this->desaOrdre();
+    }
+
+    public function desaOrdre(){
+
+        $lloctreballs = Lloctreball::all()->find(1);
+        $Ordre = Ordre::orderBy('id', 'desc')->first();
+        $createdAtOrdre = $Ordre->created_at;
+        $dftestOrdre=Freque::where('created_at','>=',$createdAtOrdre)->get()->SUM('numero_peces_sortint');
+        $defectuoses = Qualitat::where('created_at','>=',$createdAtOrdre)->get()->SUM('defectuoses'); //Exemple de com escollir per dia
+        $bonesOrdre = Freque::where('created_at','>=',$createdAtOrdre)->get()->SUM('numero_peces');
+        $dftestOrdre = $bonesOrdre-$dftestOrdre;
+        $defectuosesOrdre = $dftestOrdre + $defectuoses;
+        $comptaMitja = Freque::where('created_at','>=',$createdAtOrdre)->get()->where('idESP','==',1)->count();
+        $frequenciaOrdre =($bonesOrdre)/($comptaMitja);
+
+        $Ordre->unitats_produides = $bonesOrdre;
+        $Ordre->frequencia_produccio=$frequenciaOrdre;
+        $Ordre->unitats_defectuoses=$defectuosesOrdre;
+        $Ordre->data_hora_final=Carbon::now();
+        $Ordre->save();
+
+        return redirect()->route('index');
     }
 
     public function emplenaOrdrePrimer(){
@@ -183,6 +207,7 @@ class GraficsController extends Controller
         // Adquirir numero d'unitats a produir
         $descripcio = Ordre::orderBy('id', 'desc')->first();
         $unitatsProduir=$descripcio->unitats_produir;
+        $createdAtOrdre = $descripcio->created_at;
 
         //futur control de temps EX: Model::whereBetween('date', [$from, $to])->get();
 
@@ -246,28 +271,31 @@ class GraficsController extends Controller
 
 
         // Dades PieChart2
+        $dftestOrdre=Freque::where('created_at','>=',$createdAtOrdre)->get()->SUM('numero_peces_sortint');
+        $defectuosesOrdre = Qualitat::where('created_at','>=',$createdAtOrdre)->get()->SUM('defectuoses'); //Exemple de com escollir per dia
+        $bonesOrdre = Freque::where('created_at','>=',$createdAtOrdre)->get()->SUM('numero_peces');
+        $dftestOrdre = $bonesOrdre-$dftestOrdre;
+        $qualitats[] = ['Bones','Defectuoses'];
+        $qualitats[] = ['Bones',$bonesOrdre];
+        $qualitats[] = ['Defectuoses',$defectuosesOrdre+$dftestOrdre];
+        $qualitats[] = ['Peces Restants',($unitatsProduir - $defectuosesOrdre - $dftestOrdre - $bonesOrdre)];
+        $qualitats = json_encode($qualitats);
+
+        //Càlcul indexs
+        $lloctreballs = Lloctreball::all()->find(1);
+
+        //Qualitat
         $dftest=Freque::whereDate('created_at', Carbon::today())->get()->SUM('numero_peces_sortint');
         $defectuoses = Qualitat::whereDate('created_at', Carbon::today())->get()->SUM('defectuoses'); //Exemple de com escollir per dia
         $bones = Freque::whereDate('created_at', Carbon::today())->get()->SUM('numero_peces');
         $dftest = $bones-$dftest;
-        $qualitats[] = ['Bones','Defectuoses'];
-        $qualitats[] = ['Bones',$bones];
-        $qualitats[] = ['Defectuoses',$defectuoses+$dftest];
-        $qualitats[] = ['Peces Restants',($unitatsProduir - $defectuoses - $dftest - $bones)];
-        $qualitats = json_encode($qualitats);
-
-
-        //Càlcul indexs
-        $lloctreballs = Lloctreball::all()->find(1);
+        $qualitat = ((($bones)/($bones + $defectuoses + $dftest))*100);
+        $qualitat = json_encode($qualitat);
 
         //Rendiment
         $comptaMitja = Freque::whereDate('created_at', Carbon::today())->get()->where('idESP','==',1)->count();
         $rendiment =((($bones)/($comptaMitja))/($lloctreballs->Velocitat_esperada))*100;
         $rendiment = json_encode($rendiment);
-
-        //Qualitat
-        $qualitat = ((($bones)/($bones + $defectuoses + $dftest))*100);
-        $qualitat = json_encode($qualitat);
 
         //Disponibilitat
         $tempsProductiu = Esdeveniment::whereDate('created_at', Carbon::today())->get()->where('ID_causa','==',5)->SUM('modul_temps');
