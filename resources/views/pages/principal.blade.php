@@ -55,7 +55,7 @@
 
             var data = google.visualization.arrayToDataTable([
             ['Label', 'Value'],
-            ['rendiment', rendiment]
+            ['Rendiment', rendiment]
             ]);
 
             var options = {
@@ -86,7 +86,7 @@
 
             var data = google.visualization.arrayToDataTable([
             ['Label', 'Value'],
-            ['qualitat', qualitat]
+            ['Qualitat', qualitat]
             ]);
 
             var options = {
@@ -123,7 +123,7 @@
 
             var data = google.visualization.arrayToDataTable([
             ['Label', 'Value'],
-            ['oee', oee]
+            ['OEE', oee]
             ]);
 
             var options = {
