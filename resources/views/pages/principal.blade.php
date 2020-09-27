@@ -20,6 +20,8 @@
 
             var disponibilitat = <?php echo $disponibilitat; ?>
 
+            var objDisponibilitat = <?php echo $objDisponibilitat; ?>
+
             var data = google.visualization.arrayToDataTable([
             ['Label', 'Value'],
             ['Disponibilitat', disponibilitat]
@@ -27,9 +29,9 @@
 
             var options = {
             width:'auto', height:'auto',
-            greenColor: '#1D8348', greenFrom: 60, greenTo: 100,
-            yellowColor: '#F1C40F ', yellowFrom:40, yellowTo: 60,
-            redColor: '#C70039', redFrom:0, redTo: 40,
+            greenColor: '#1D8348', greenFrom: objDisponibilitat, greenTo: 100,
+            yellowColor: '#F1C40F ', yellowFrom:objDisponibilitat-20, yellowTo: objDisponibilitat,
+            redColor: '#C70039', redFrom:0, redTo: objDisponibilitat-20,
             minorTicks: 5
             };
 
@@ -49,6 +51,8 @@
 
             var rendiment = <?php echo $rendiment; ?>
 
+            var objRendiment = <?php echo $objRendiment; ?>
+
             var data = google.visualization.arrayToDataTable([
             ['Label', 'Value'],
             ['rendiment', rendiment]
@@ -56,9 +60,9 @@
 
             var options = {
             width:'auto', height:'auto',
-            greenColor: '#1D8348', greenFrom: 60, greenTo: 100,
-            yellowColor: '#F1C40F ', yellowFrom:40, yellowTo: 60,
-            redColor: '#C70039', redFrom:0, redTo: 40,
+            greenColor: '#1D8348', greenFrom: objRendiment, greenTo: 100,
+            yellowColor: '#F1C40F ', yellowFrom:objRendiment-20, yellowTo: objRendiment,
+            redColor: '#C70039', redFrom:0, redTo: objRendiment-20,
             minorTicks: 5
             };
 
@@ -78,6 +82,8 @@
 
             var qualitat = <?php echo $qualitat; ?>
 
+            var objQualitat = <?php echo $objQualitat; ?>
+
             var data = google.visualization.arrayToDataTable([
             ['Label', 'Value'],
             ['qualitat', qualitat]
@@ -85,9 +91,9 @@
 
             var options = {
             width:'auto', height:'auto',
-            greenColor: '#1D8348', greenFrom: 60, greenTo: 100,
-            yellowColor: '#F1C40F ', yellowFrom:40, yellowTo: 60,
-            redColor: '#C70039', redFrom:0, redTo: 40,
+            greenColor: '#1D8348', greenFrom: objQualitat, greenTo: 100,
+            yellowColor: '#F1C40F ', yellowFrom:objQualitat-20, yellowTo: objQualitat,
+            redColor: '#C70039', redFrom:0, redTo: objQualitat-20,
             minorTicks: 5
             };
 
@@ -111,6 +117,8 @@
 
             var qualitat = <?php echo $qualitat; ?>
 
+            var objOEE = <?php echo $objOEE; ?>
+
             var oee = (disponibilitat/100)*(rendiment/100)*(qualitat/100)*100
 
             var data = google.visualization.arrayToDataTable([
@@ -120,9 +128,9 @@
 
             var options = {
             width:'auto', height:'auto',
-            greenColor: '#1D8348', greenFrom: 60, greenTo: 100,
-            yellowColor: '#F1C40F ', yellowFrom:40, yellowTo: 60,
-            redColor: '#C70039', redFrom:0, redTo: 40,
+            greenColor: '#1D8348', greenFrom: objOEE, greenTo: 100,
+            yellowColor: '#F1C40F ', yellowFrom:objOEE-20, yellowTo: objOEE,
+            redColor: '#C70039', redFrom:0, redTo: objOEE-20,
             minorTicks: 5
             };
 

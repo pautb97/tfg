@@ -284,6 +284,16 @@ class GraficsController extends Controller
         //Càlcul indexs
         $lloctreballs = Lloctreball::all()->find(1);
 
+       // Gestió colors gauge charts
+        $objDisponibilitat = $lloctreballs->obj_Disponibilitat;
+        $objRendiment = $lloctreballs->obj_Rendiment;
+        $objQualitat = $lloctreballs->obj_Qualitat;
+        $objOEE = $lloctreballs->obj_OEE;
+        $objDisponibilitat = json_encode($objDisponibilitat);
+        $objRendiment = json_encode($objRendiment);
+        $objQualitat = json_encode($objQualitat);
+        $objOEE = json_encode($objOEE);
+
         //Qualitat
         $dftest=Freque::whereDate('created_at', Carbon::today())->get()->SUM('numero_peces_sortint');
         $defectuoses = Qualitat::whereDate('created_at', Carbon::today())->get()->SUM('defectuoses'); //Exemple de com escollir per dia
@@ -322,6 +332,6 @@ class GraficsController extends Controller
         $activaBoto = json_encode(Esdeveniment::orderBy('id', 'DESC')->first()->maquina_produccio);
 
         return view('pages.principal',
-        compact('qualitats','causes','temps','rendiment','qualitat','disponibilitat','indexsTaula','descripcio','quantitatAProduir','activaBoto','consum'));
+        compact('qualitats','causes','temps','rendiment','qualitat','disponibilitat','indexsTaula','descripcio','quantitatAProduir','activaBoto','consum','objDisponibilitat','objRendiment','objQualitat','objOEE'));
     }
 }
